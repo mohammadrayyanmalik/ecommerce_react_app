@@ -16,12 +16,12 @@ function ProductForm({ onAddProduct, selectedProduct }) {
     addProduct({
       productId: e.target.productId.value,
       productName: e.target.productName.value,
-      description: e.target.productDescription.value,
-      productPrice: e.target.productprice.value,
+      description: e.target.description.value,
+      productPrice: e.target.productPrice.value,
     }).then((data) => {
       onAddProduct();
       return data;
-    });
+    })
   };
 
   useEffect(()=>{
@@ -32,8 +32,20 @@ function ProductForm({ onAddProduct, selectedProduct }) {
 
 //   TO control change in input box
 const handlechange=(event)=>{
-    console.log(event.target)
+    // console.log(event.target)
+    let{name,value}=event.target;
+    // console.log(name+" "+value)
+    setProduct((previousProduct)=>{
+      console.log(previousProduct)
+      return {...previousProduct,[name]:value}
+    })
+}
 
+// ==============================================================================
+
+// to handle update 
+const updateHandler=()=>{
+  console.log("update handler called");
 }
 
 
@@ -41,7 +53,7 @@ const handlechange=(event)=>{
 
   return (
     <div className="container border border-primary border-3 p-3 my-3">
-      <form onSubmit={submitHandler}>
+      <form onSubmit={selectedProduct?updateHandler:submitHandler}>
         <h1 className="bg-primary p-2 text-white text-center">Add Product</h1>
         {/* Product Id */}
         <div className="mb-3">
@@ -85,7 +97,7 @@ const handlechange=(event)=>{
             className="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
-            name="productDescription"
+            name="description"
             value={product.description}
             onChange={handlechange}
           />
@@ -101,7 +113,7 @@ const handlechange=(event)=>{
             className="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
-            name="productprice"
+            name="productPrice"
             value={product.productPrice}
             onChange={handlechange}
           />
