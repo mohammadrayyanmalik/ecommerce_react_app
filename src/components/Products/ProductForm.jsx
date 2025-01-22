@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { addProduct } from "../../services/ProductService";
+import { addProduct, updateProduct } from "../../services/ProductService";
 
-function ProductForm({ onAddProduct, selectedProduct }) {
+function ProductForm({ onAddProduct, selectedProduct,setSelectedProduct }) {
   // Function to be called when form will be submitted
 
   let [product, setProduct] = useState({
@@ -12,7 +12,7 @@ function ProductForm({ onAddProduct, selectedProduct }) {
   });
 
   const submitHandler = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     addProduct({
       productId: e.target.productId.value,
       productName: e.target.productName.value,
@@ -20,7 +20,13 @@ function ProductForm({ onAddProduct, selectedProduct }) {
       productPrice: e.target.productPrice.value,
     }).then((data) => {
       onAddProduct();
+      setProduct({ productId: "",
+        productName: "",
+        description: "",
+        productPrice: ""})
+        
       return data;
+    
     })
   };
 
@@ -44,13 +50,31 @@ const handlechange=(event)=>{
 // ==============================================================================
 
 // to handle update 
-const updateHandler=()=>{
+const updateHandler=(e)=>{
+  e.preventDefault()
   console.log("update handler called");
+  updateProduct(selectedProduct._links.self.href,{
+    productName:e.target.productName.value,
+    description:e.target.description.value,
+    productPrice:e.target.productPrice.value
+
+  }).then((data) => {
+    onAddProduct();
+    setProduct({
+      productId: "",
+      productName: "",
+      description: "",
+      productPrice: "",
+    })
+    setSelectedProduct(null);
+   
+  })
+  
 }
 
 
 
-
+// ================================================
   return (
     <div className="container border border-primary border-3 p-3 my-3">
       <form onSubmit={selectedProduct?updateHandler:submitHandler}>
@@ -120,9 +144,7 @@ const updateHandler=()=>{
         </div>
 
         {/* Button to submit form  */}
-        <button type="submit" className="btn btn-primary">
-          Submit
-        </button>
+        <button type="submit" className="btn btn-primary" >{selectedProduct?"Update":"Submit"}</button>
       </form>
     </div>
   );

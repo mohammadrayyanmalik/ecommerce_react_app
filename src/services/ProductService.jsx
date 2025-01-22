@@ -28,3 +28,52 @@ export const getProductById = (product_link) => {
     .then((data) => data.json())
     .then((data) =>data);
 };
+
+export const updateProduct=(product_id_link,product)=>{
+
+  return fetch(product_id_link,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(product)
+  })
+  .then((data) => data.json())
+    .then((data) => data);
+}
+
+export const deleteProduct=(product_id_link)=>{
+  return fetch (product_id_link,{
+    method:"Delete"})
+    .then((data)=>data.json())
+  .then((data)=>data)
+
+}
+
+export const getProductLowToHigh = () => {
+  return fetch("http://localhost:8080/products/search/findByOrderByProductPriceAsc")
+    .then((data) => data.json())
+    .then((data) => {
+      return data._embedded.products;
+    });
+};
+export const getProductHighToLow = () => {
+  return fetch("http://localhost:8080/products/search/findByOrderByProductPriceDesc")
+    .then((data) => data.json())
+    .then((data) => {
+      return data._embedded.products;
+    });
+};
+
+export const getProductAToZ = () => {
+  return fetch("http://localhost:8080/products/search/findByOrderByProductNameAsc")
+    .then((data) => data.json())
+    .then((data) => {
+      return data._embedded.products;
+    });
+};
+export const getProductZToA = () => {
+  return fetch("http://localhost:8080/products/search/findByOrderByProductNameDesc")
+    .then((data) => data.json())
+    .then((data) => {
+      return data._embedded.products;
+    });
+};

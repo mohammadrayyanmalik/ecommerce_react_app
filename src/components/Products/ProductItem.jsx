@@ -1,13 +1,24 @@
 import React from "react";
-import { getProductById } from "../../services/ProductService";
+import { deleteProduct, getProductById } from "../../services/ProductService";
 
-function ProductItem({ productName, ProductDescription, productPrice,product_link,onSelectProduct}) {
+function ProductItem({ productName, ProductDescription, productPrice,product_link,onSelectProduct,onDeleteProduct}) {
+
   const onSelectUpdate=async(link)=>{
 // console.log(link);
     let product=await getProductById(link)
      onSelectProduct(product)
 
   }
+
+  
+//================================================================
+// function to delete product
+const onSelectDelete=async(product_id_link)=>{
+  const deletedProduct=await deleteProduct(product_id_link)
+  onDeleteProduct();
+
+  }
+//==============================================================
 
   return (
     <div>
@@ -21,8 +32,9 @@ function ProductItem({ productName, ProductDescription, productPrice,product_lin
             {/* Updata Button */}
             <button className="btn btn-success" onClick={()=>{onSelectUpdate(product_link)}}>Update</button>
             {/* Delete Button */}
-            <button className="btn btn-danger">Delete</button>
+            <button className="btn btn-danger" onClick={()=>{onSelectDelete(product_link)}}> Delete</button>
           </div>
+
         </div>
       </div>
     </div>
