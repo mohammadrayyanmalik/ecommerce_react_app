@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { getProduct, getProductAToZ, getProductHighToLow, getProductLowToHigh, getProductZToA } from "../../services/ProductService";
+import {
+  getProduct,
+  getProductAToZ,
+  getProductHighToLow,
+  getProductLowToHigh,
+  getProductZToA,
+} from "../../services/ProductService";
 import ProductItem from "./ProductItem";
 import ProductForm from "./ProductForm";
 
-function Product() {
+function Product({queryFromNavbar}) {
   let [products, setProduct] = useState([]);
   let [selectedProduct, setSelectedProduct] = useState(null);
+  let [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     getProduct().then((data) => {
       setProduct(data);
-    });
-  }, []);
+    })
+    if(queryFromNavbar)
+    {
+      setSearchQuery(queryFromNavbar)
+    }
+  }, [queryFromNavbar]);
 
   const refreshProduct = () => {
     getProduct().then((data) => {
@@ -42,11 +53,13 @@ function Product() {
     }
   };
 
+  // sorting data
+
   return (
     <div>
-      <div class="container">
-        <div class="row">
-          <div class="col">
+      <div className="container">
+        <div className="row">
+          <div className="col">
             {/* Product From Start */}
 
             <ProductForm
@@ -57,11 +70,11 @@ function Product() {
 
             {/* Produt Form End */}
           </div>
-          <div class="col">
+          <div className="col">
             {/* Showing number of products : start */}
-            <button type="button" class="btn btn-primary">
+            <button type="button" className="btn btn-primary">
               Number of Products{" "}
-              <span class="badge bg-primary" mb-3>
+              <span className="badge bg-primary" mb-3>
                 {products.length}
               </span>
             </button>
@@ -69,25 +82,65 @@ function Product() {
 
             {/* Sorting start */}
             <ul className="list-group mt-3">
-              <li class="list-group-item" onClick={()=>{sortBy(1)}}>
+              <li
+                className="list-group-item"
+                onClick={() => {
+                  sortBy(1);
+                }}
+              >
                 Low to High
               </li>
-              <li class="list-group-item" onClick={()=>{sortBy(2)}}>
+              <li
+                className="list-group-item"
+                onClick={() => {
+                  sortBy(2);
+                }}
+              >
                 High to Low
               </li>
-              <li class="list-group-item" onClick={()=>{sortBy(3)}}>
+              <li
+                className="list-group-item"
+                onClick={() => {
+                  sortBy(3);
+                }}
+              >
                 A to Z
               </li>
-              <li class="list-group-item" onClick={()=>{sortBy(4)}}>
+              <li
+                className="list-group-item"
+                onClick={() => {
+                  sortBy(4);
+                }}
+              >
                 Z to A
               </li>
             </ul>
             {/* sorting End */}
+            <hr />
+            {/*==================================================== search :Start =============================*/}
+
+            <div className="mb-3">
+              <input
+                type="email"
+                className="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                onChange={(e)=>{setSearchQuery(e.target.value)}}
+              />
+              <div id="emailHelp" className="form-text">
+                We'll never share your email with anyone else.
+              </div>
+            </div>
+
+            {/*======================================= Search :End======================================== */}
 
             {/* Displaying product :Start */}
 
-            <div class="row row-cols-1 row-cols-md-2 g-4 p-1 my-1">
-              {products.map((p) => {
+            <div className="row row-cols-1 row-cols-md-2 g-4 p-1 my-1">
+              {products.filter(p=>{
+                return p.productName.toLowerCase()
+                .includes(searchQuery.toLowerCase()) 
+              }).map((p) => {
                 return (
                   <ProductItem //p.productName jo hai woh Api ka name hai and productName= props hai
                     productName={p.productName}
