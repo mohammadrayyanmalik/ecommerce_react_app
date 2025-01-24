@@ -22,7 +22,7 @@ function Product({queryFromNavbar}) {
     {
       setSearchQuery(queryFromNavbar)
     }
-  }, [queryFromNavbar]);
+  }, [queryFromNavbar]); 
 
   const refreshProduct = () => {
     getProduct().then((data) => {
@@ -60,7 +60,7 @@ function Product({queryFromNavbar}) {
       <div className="container">
         <div className="row">
           <div className="col">
-            {/* Product From Start */}
+            {/* Product Form Start */}
 
             <ProductForm
               onAddProduct={refreshProduct}
