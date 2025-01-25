@@ -26,6 +26,8 @@ const onSelectDelete=async(product_id_link)=>{
       <div className="col">
         <div class="card ">
           <div class="card-body">
+          <img src={product_link+"/image"} class="card-img-top" alt="..."/>
+
             <h5 class="card-title">ProductName: {productName}</h5>
             <p class="card-text">Description: {ProductDescription}</p>
             <p class="card-text">Price: {productPrice}</p>

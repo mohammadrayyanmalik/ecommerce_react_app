@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { addProduct, updateProduct } from "../../services/ProductService";
+import { addProduct, updateProduct, uploadProductImage } from "../../services/ProductService";
 
-function ProductForm({ onAddProduct, selectedProduct,setSelectedProduct }) {
+function ProductForm({ onAddProduct, selectedProduct, setSelectedProduct }) {
   // Function to be called when form will be submitted
 
   let [product, setProduct] = useState({
@@ -12,72 +12,70 @@ function ProductForm({ onAddProduct, selectedProduct,setSelectedProduct }) {
   });
 
   const submitHandler = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     addProduct({
       productId: e.target.productId.value,
       productName: e.target.productName.value,
       description: e.target.description.value,
       productPrice: e.target.productPrice.value,
     }).then((data) => {
+      uploadProductImage(data._links.self.href,e.target.productImage.files[0])
+      .then(data=>data)
+
       onAddProduct();
-      setProduct({ productId: "",
+      setProduct({
+        productId: "",
         productName: "",
         description: "",
-        productPrice: ""})
-        
+        productPrice: "",
+      });
+
       return data;
-    
-    })
+    });
   };
 
-  useEffect(()=>{
-    if (selectedProduct)
-        setProduct(selectedProduct)
-  },[selectedProduct]);
+  useEffect(() => {
+    if (selectedProduct) setProduct(selectedProduct);
+  }, [selectedProduct]);
   // ================================================
 
-//   TO control change in input box
-const handlechange=(event)=>{
+  //   TO control change in input box
+  const handlechange = (event) => {
     // console.log(event.target)
-    let{name,value}=event.target;
+    let { name, value } = event.target;
     // console.log(name+" "+value)
-    setProduct((previousProduct)=>{
-      console.log(previousProduct)
-      return {...previousProduct,[name]:value}
-    })
-}
+    setProduct((previousProduct) => {
+      console.log(previousProduct);
+      return { ...previousProduct, [name]: value };
+    });
+  };
 
-// ==============================================================================
+  // ==============================================================================
 
-// to handle update 
-const updateHandler=(e)=>{
-  e.preventDefault()
-  console.log("update handler called");
-  updateProduct(selectedProduct._links.self.href,{
-    productName:e.target.productName.value,
-    description:e.target.description.value,
-    productPrice:e.target.productPrice.value
+  // to handle update
+  const updateHandler = (e) => {
+    e.preventDefault();
+    console.log("update handler called");
+    updateProduct(selectedProduct._links.self.href, {
+      productName: e.target.productName.value,
+      description: e.target.description.value,
+      productPrice: e.target.productPrice.value,
+    }).then((data) => {
+      onAddProduct();
+      setProduct({
+        productId: "",
+        productName: "",
+        description: "",
+        productPrice: "",
+      });
+      setSelectedProduct(null);
+    });
+  };
 
-  }).then((data) => {
-    onAddProduct();
-    setProduct({
-      productId: "",
-      productName: "",
-      description: "",
-      productPrice: "",
-    })
-    setSelectedProduct(null);
-   
-  })
-  
-}
-
-
-
-// ================================================
+  // ================================================
   return (
     <div className="container border border-primary border-3 p-3 my-3">
-      <form onSubmit={selectedProduct?updateHandler:submitHandler}>
+      <form onSubmit={selectedProduct ? updateHandler : submitHandler}>
         <h1 className="bg-primary p-2 text-white text-center">Add Product</h1>
         {/* Product Id */}
         <div className="mb-3">
@@ -143,8 +141,25 @@ const updateHandler=(e)=>{
           />
         </div>
 
+        {/* Product Image */}
+        <div className="mb-3">
+          <label for="exampleInputEmail1" className="form-label">
+            Product Image
+          </label>
+          <input
+            type="file"
+            className="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+            name="productImage"
+            onChange={handlechange}
+          />
+        </div>
+
         {/* Button to submit form  */}
-        <button type="submit" className="btn btn-primary" >{selectedProduct?"Update":"Submit"}</button>
+        <button type="submit" className="btn btn-primary">
+          {selectedProduct ? "Update" : "Submit"}
+        </button>
       </form>
     </div>
   );
