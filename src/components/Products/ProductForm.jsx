@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { addProduct, updateProduct, uploadProductImage } from "../../services/ProductService";
 
 function ProductForm({ onAddProduct, selectedProduct, setSelectedProduct }) {
-  // Function to be called when form will be submitted
-
-  let [product, setProduct] = useState({
+  
+// ==================================================================
+// Function to be called when form will be submitted  
+let [product, setProduct] = useState({
     productId: "",
     productName: "",
     description: "",
