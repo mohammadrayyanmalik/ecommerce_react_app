@@ -4,9 +4,13 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import Product from './components/Products/Product';
 import Navbar from './components/Navbar';
 import SearchComponent from './components/Products/SearchComponent';
+import useInternet from './useInternet';
+import Parent from './Parent'
 
 function App() {
   // cretaing routes
+let internetStauts=useInternet();
+
   const routs=createBrowserRouter([
     {
       path:"/products",
@@ -19,6 +23,8 @@ function App() {
       path:"/",
       element:<>
       <Navbar/>
+      <Parent/>
+
       </>
     },
     {
@@ -32,6 +38,7 @@ function App() {
   return (
     <div>
         <RouterProvider router={routs}/>
+        <h1>{internetStauts?"You are online":"you are offline"}</h1>
     </div>
   );
 }
